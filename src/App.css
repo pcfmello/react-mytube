@@ -18,5 +18,6 @@
 
 .video-list {
   grid-area: video-list;
-  background-color: yellow;
+  background-color: #fffacd;
+  padding: 15px;
 }
