@@ -1,17 +1,20 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { compose } from "recompose";
+import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import { List, ListItem, Typography } from "@material-ui/core";
 import Truncate from "react-truncate";
 import Skeleton from "react-loading-skeleton";
 import { playVideo } from "../store/actions/play-video";
 
-const styles = theme => ({
-  listItem: {
-    padding: "0 24px 0 0",
+const styles = {
+  horizontalDividerVideoList: {
     marginBottom: 8
+  },
+  listItem: {
+    padding: "0"
   },
   image: {
     marginRight: 8
@@ -30,30 +33,31 @@ const styles = theme => ({
   },
   // skeleton
   skeleton: {
-    display: "flex",
-    marginBottom: 8
+    display: "flex"
+  },
+  skeletonImage: {
+    marginRight: 8
   },
   skeletonDescription: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
-    padding: "0 24px 0 0"
-  },
-  skeletonDescriptionItem: {
-    padding: "0 24px 0 0"
+    width: "100%"
   }
-});
+};
 
-class VideoList extends Component {
-  renderVideo = video => (
+const VideoList = ({ classes, play, loading, videos }) => {
+  const renderVideo = video => (
     <ListItem
       key={video.etag}
-      className={this.props.classes.listItem}
+      className={classNames(
+        classes.horizontalDividerVideoList,
+        classes.listItem
+      )}
       disableGutters
       button
-      onClick={() => this.props.play(video)}
+      onClick={() => play(video)}
     >
-      <div className={this.props.classes.image}>
+      <div className={classes.image}>
         <img
           src={video.snippet.thumbnails.default.url}
           alt={video.snippet.title}
@@ -61,23 +65,19 @@ class VideoList extends Component {
           width={video.snippet.thumbnails.default.width}
         />
       </div>
-      <div className={this.props.classes.videoData}>
-        <Typography
-          gutterBottom
-          variant="subtitle2"
-          className={this.props.classes.title}
-        >
+      <div className={classes.videoData}>
+        <Typography gutterBottom variant="subtitle2" className={classes.title}>
           <Truncate lines={3} ellipsis={<span>...</span>}>
             {video.snippet.title}
           </Truncate>
         </Typography>
-        <Typography gutterBottom className={this.props.classes.title}>
+        <Typography gutterBottom className={classes.title}>
           <Truncate lines={1} ellipsis={<span>...</span>}>
             {video.snippet.description}
           </Truncate>
         </Typography>
-        <div className={this.props.classes.channelInformation}>
-          <Typography noWrap className={this.props.classes.channelTitle}>
+        <div className={classes.channelInformation}>
+          <Typography noWrap className={classes.channelTitle}>
             {video.snippet.channelTitle}
           </Typography>
         </div>
@@ -85,54 +85,48 @@ class VideoList extends Component {
     </ListItem>
   );
 
-  skeleton = () => (
-    <div className={this.props.classes.skeleton}>
-      <span
-        style={{ marginRight: 8 }}
-        className={this.props.classes.skeletonImage}
+  const skeletonVideoList = (times = 1) =>
+    Array.from({ length: times }).map(item => (
+      <div
+        className={classNames(
+          classes.horizontalDividerVideoList,
+          classes.skeleton
+        )}
       >
-        <Skeleton height={90} width={120} />
-      </span>
-      <div className={this.props.classes.skeletonDescription}>
-        <Skeleton height={14} />
-        <div style={{ width: "55%" }}>
-          <Skeleton
-            height={14}
-            className={this.props.classes.skeletonDescriptionItem}
-          />
-        </div>
-        <div
-          style={{ width: "70%", marginBottom: 8 }}
-          className={this.props.classes.skeletonDescriptionItem}
-        >
+        <span className={classes.skeletonImage}>
+          <Skeleton height={90} width={120} />
+        </span>
+        <div className={classes.skeletonDescription}>
           <Skeleton height={14} />
-        </div>
-        <div
-          style={{ width: "40%" }}
-          className={this.props.classes.skeletonDescriptionItem}
-        >
-          <Skeleton height={14} />
+          <div style={{ width: "55%" }}>
+            <Skeleton height={14} />
+          </div>
+          <div
+            className={classes.horizontalDividerVideoList}
+            style={{ width: "70%" }}
+          >
+            <Skeleton height={14} />
+          </div>
+          <div style={{ width: "40%" }}>
+            <Skeleton height={14} />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    ));
 
-  render = () => (
-    <React.Fragment>
-      {!this.props.loading &&
-        Array.from({ length: 5 }).map(item => this.skeleton())}
-      {!this.props.loading && (
-        <List disablePadding>
-          {this.props.videos.map(video => this.renderVideo(video))}
-        </List>
-      )}
-    </React.Fragment>
+  return (
+    <List disablePadding>
+      {!loading && skeletonVideoList(5)}
+      {!loading && videos.map(video => renderVideo(video))}
+    </List>
   );
-}
+};
 
 VideoList.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
+  loading: PropTypes.bool,
+  videos: PropTypes.array,
+  play: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -146,7 +140,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const enhance = compose(
-  withStyles(styles, { withTheme: true }),
+  withStyles(styles),
   connect(
     mapStateToProps,
     mapDispatchToProps
