@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
 import find from "./find";
+import play from "./play";
 
 const rootReducer = combineReducers({
-  find
+  find,
+  play
 });
 
 export default rootReducer;

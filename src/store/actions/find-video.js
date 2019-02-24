@@ -2,25 +2,25 @@
 import youtubeSearch from "youtube-api-v3-search";
 import youtubeApi from "../../api";
 
+import {
+  FIND_VIDEO_START,
+  FIND_VIDEO_SUCCESS,
+  FIND_VIDEO_ERROR
+} from "../reducers/find";
+
 const API_KEY = youtubeApi;
 
 export const findVideoStart = () => ({
-  type: "FIND_VIDEO_START",
-  loading: true,
-  error: false
+  type: FIND_VIDEO_START
 });
 
-export const findVideoSuccess = videos => ({
-  type: "FIND_VIDEO_SUCCESS",
-  videos,
-  loading: false,
-  error: false
+export const findVideoSuccess = payload => ({
+  type: FIND_VIDEO_SUCCESS,
+  payload
 });
 
 export const findVideoError = () => ({
-  type: "FIND_VIDEO_ERROR",
-  loading: false,
-  error: true
+  type: FIND_VIDEO_ERROR
 });
 
 export const findVideo = q => {
