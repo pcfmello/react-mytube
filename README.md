@@ -5,9 +5,11 @@ Ficou bem limitado pois são poucos os dados que a API utilizada do YouTube reto
 
 ## Rodando o projeto
 Instale as dependncias:
+
 `$ yarn install`
 
 Inicie o projeto:
+
 `$ yarn start`
 
 Abra o link [http://localhost:3000](http://localhost:3000) para visualizar no browser.
