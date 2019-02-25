@@ -1,35 +1,60 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { TextField, InputAdornment } from "@material-ui/core";
+import PropTypes from "prop-types";
+import { compose } from "recompose";
+import { withStyles } from "@material-ui/core/styles";
+import { TextField, InputAdornment, IconButton } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 
-import { findVideo } from "../store/actions/find-video";
+import { searchVideo } from "../store/actions/find-video";
 
+const styles = {
+  textField: {
+    width: "100%"
+  },
+  cssOutlinedInput: {
+    "&$cssFocused $notchedOutline": {
+      borderColor: "black !important"
+    }
+  },
+  cssFocused: {},
+  notchedOutline: {}
+};
 class SearchBar extends Component {
   constructor(props) {
     super(props);
-    props.findVideo("pcfmello");
+    props.searchVideo("pcfmello");
   }
 
-  find = event => {
-    if (event.keyCode === 13) {
+  search = event => {
+    const isEnterPressEvent = event.keyCode === 13;
+    const isMouseClickEvent = !event.keyCode;
+    if (isMouseClickEvent || isEnterPressEvent) {
       const query = event.target.value;
-      this.props.findVideo(query);
+      this.props.searchVideo(query);
     }
   };
 
   render = () => {
+    const { classes } = this.props;
     return (
       <TextField
         margin="normal"
         variant="outlined"
         placeholder="O que deseja assistir?"
-        onKeyDown={this.find}
-        style={{ width: "100%" }}
+        onKeyDown={this.search}
+        className={classes.textField}
         InputProps={{
+          classes: {
+            root: classes.cssOutlinedInput,
+            focused: classes.cssFocused,
+            notchedOutline: classes.notchedOutline
+          },
           endAdornment: (
             <InputAdornment position="end">
-              <Search />
+              <IconButton onClick={this.search}>
+                <Search />
+              </IconButton>
             </InputAdornment>
           )
         }}
@@ -38,11 +63,21 @@ class SearchBar extends Component {
   };
 }
 
+SearchBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  searchVideo: PropTypes.func.isRequired
+};
+
 const mapDispatchToProps = dispatch => ({
-  findVideo: query => dispatch(findVideo(query))
+  searchVideo: query => dispatch(searchVideo(query))
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(SearchBar);
+const enhance = compose(
+  withStyles(styles),
+  connect(
+    null,
+    mapDispatchToProps
+  )
+);
+
+export default enhance(SearchBar);

@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { compose } from "recompose";
-import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import ReactPlayer from "react-player";
+import { withStyles } from "@material-ui/core/styles";
+import VideoPlayerData from "../VideoPlayerData";
 
 const styles = {
   emptyPlayer: {
@@ -11,7 +12,8 @@ const styles = {
   },
   playerWrapper: {
     position: "relative",
-    paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */
+    paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
+    marginBottom: 24
   },
   ReactPlayer: {
     position: "absolute",
@@ -44,8 +46,8 @@ const VideoPlayer = props => (
               height="100%"
             />
           </div>
-          <h3>{props.video.snippet.title}</h3>
-          <p>{props.video.snippet.description}</p>
+
+          <VideoPlayerData video={props.video} />
         </div>
       )}
     </div>

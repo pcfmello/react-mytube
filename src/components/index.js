@@ -1,18 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Grid } from "@material-ui/core";
+import { Grid, Hidden } from "@material-ui/core";
 
 import SearchBar from "./SearchBar";
 import VideoPlayer from "./VideoPlayer";
 import VideoList from "./VideoList";
 
+import { YOUTUBE_LOGO_LARGE, YOUTUBE_LOGO_SMALL } from "../constants";
+
 const styles = {
   main: {
     padding: "24px 36px"
   },
-  logo: {
-    width: "75%"
+  logoLarge: {
+    width: 120
+  },
+  logoSmall: {
+    width: 90
   }
 };
 
@@ -25,22 +30,32 @@ const Main = ({ classes }) => (
       alignItems="center"
       spacing={24}
     >
-      <Grid item xs={2}>
-        <img
-          className={classes.logo}
-          srcSet="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR79I8t6Agc7dlC72VoIzUwvDBvMNVTsM92QmcB1vPJMFJn68dX"
-          alt="Logo"
-        />
+      <Grid item xs={12} sm={2} xl={1}>
+        <Hidden smDown>
+          <img
+            className={classes.logoLarge}
+            srcSet={YOUTUBE_LOGO_LARGE}
+            alt="Logo"
+          />
+        </Hidden>
+        <Hidden only={["xs", "md", "lg", "xl"]}>
+          <img
+            className={classes.logoSmall}
+            srcSet={YOUTUBE_LOGO_SMALL}
+            alt="Logo"
+          />
+        </Hidden>
       </Grid>
-      <Grid item xs={10}>
+
+      <Grid item xs={12} sm={10} xl={11}>
         <SearchBar />
       </Grid>
     </Grid>
     <Grid container direction="row" spacing={24}>
-      <Grid item md={8} xs={12}>
+      <Grid item xs={12} md={8} lg={9}>
         <VideoPlayer />
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid item xs={12} md={4} lg={3}>
         <VideoList />
       </Grid>
     </Grid>
