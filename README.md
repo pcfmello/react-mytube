@@ -7,6 +7,6 @@ Ficou bem limitado pois são poucos os dados que a API utilizada do YouTube reto
 ### `yarn install`
 
 ## Inicie o projeto:
-### `yarn start
+### `yarn start`
 
 Abra o link [http://localhost:3000](http://localhost:3000) para visualizar no browser.
