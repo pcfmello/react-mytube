@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { compose } from "recompose";
+import Truncate from "react-truncate";
 import { withStyles } from "@material-ui/core/styles";
 import { List, ListItem, Typography } from "@material-ui/core";
-import Truncate from "react-truncate";
 
+import VideoListError from "./VideoListError";
 import VideoListSkeleton from "./VideoListSkeleton";
 import { playVideo } from "../store/actions/play-video";
 
@@ -78,6 +79,7 @@ const VideoList = ({ classes, play, loading, videos }) => {
     <List disablePadding>
       {loading && <VideoListSkeleton times={5} />}
       {!loading && videos.map(video => renderVideo(video))}
+      {!loading && !videos.length && <VideoListError />}
     </List>
   );
 };
